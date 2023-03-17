@@ -39,6 +39,7 @@ n_max_it = 1e3;
 for j = 1 : a
     tj_prec = Ej(:,1);
     uj = Fj(:,1);
+
     % compute Lv and SV until converfence
     for i = 1 : n_max_it
         wj = Ej' * uj/ norm(Ej' * uj);
