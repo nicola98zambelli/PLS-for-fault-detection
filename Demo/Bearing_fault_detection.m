@@ -1,8 +1,9 @@
 clc
 clear
 close all
+addpath '../'
 
-% load Bearing data
+%% load Bearing data
 Tbl_Normal = readtable('../Data/Bearing_data/Normal_bearing.txt', ...
     VariableNamingRule='preserve');
 Tbl_InnerR = readtable('../Data/Bearing_data/Inner_fault.txt', ...
@@ -13,7 +14,7 @@ Tbl_RollingE = readtable('../Data/Bearing_data/Rolling_elements_fault.txt', ...
     VariableNamingRule='preserve');
 addpath '../..'/'Progetto ALES'
 
-% split data into train validation test  (60,20,20)
+%% split data into train validation test  (60,20,20)
 perc=[0.6 0.2 0.2];
 [n_normal,m_normal]=size(Tbl_Normal);
 [n_if,~]=size(Tbl_InnerR);
@@ -120,6 +121,7 @@ for a=1:m
     B2_a{a}=B2;
     P_a{a}=P;
 end
+
 %% plot low domension a=1
 X_a_reduced=X*P_a{1};
 figure;
@@ -160,6 +162,7 @@ title("PLS order reduction whit a=2")
 xlabel("PLS 1 component")
 ylabel("PLS 2 component")
 legend('Normal','inner race Fault','outer race Fault','rolling element Fault')
+
 %% plot low domension a=3
 X_a_reduced=X*P_a{3};
 figure;
@@ -185,6 +188,7 @@ xlabel("PLS 1 component")
 ylabel("PLS 2 component")
 zlabel("PLS 3 component")
 legend('Normal','inner race Fault','outer race Fault','rolling element Fault')
+
 %% Y_hat Validation phase
 Y_hat_a={};
 for a=1:m
@@ -201,10 +205,9 @@ for a=1:m
         end
     end
 end
+
 %% show performance
 disp('_____________ SHOW PERFORMANCE_______________')
-
-
 % Y observed vector class
 Y_class=[zeros(split_norm(2),1);ones(split_if(2),1);
     2*ones(split_of(2),1);3*ones(split_re(2),1)];
@@ -229,10 +232,11 @@ for a=1:m
         Y_hat_class(1)=1;
         Y_hat_class(2)=2;
     end
-    [c_matrix,Result,RefereceResult]= confusion.getMatrix(Y_class,Y_hat_class);
+    [~,Result,~]= confusion.getMatrix(Y_class,Y_hat_class);
     McE_a{a}=Result.Error;
     Precision_a{a}=Result.Precision;
 end
+
 %% plot validation result
 figure
 plot(cell2mat(McE_a),'LineWidth',2)
@@ -244,6 +248,7 @@ title("PLS order reduction whit a=2")
 xlabel("a value")
 ylabel("results")
 legend('Missclassification error','Precision')
+
 %% Test the model Fixing a equal to 6 
 % remember to add values ​​below due to rounding
 % +2 for normal and outer race fault
@@ -261,7 +266,6 @@ Y_hat=X_test*B2_a{6};
         end
     end
 
-    %%
 Y_class_test=[zeros(split_norm(3)+2,1);ones(split_if(3),1);
     2*ones(split_of(3)+2,1);3*ones(split_re(3),1)];
 
