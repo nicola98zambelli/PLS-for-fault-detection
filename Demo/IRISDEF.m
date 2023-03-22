@@ -3,7 +3,7 @@ clear
 close all
 addpath '../'
 
-Tbl = readtable('../Data/Fisher.xls');
+Tbl = readtable('../Data/Fisher_data/Fisher.xls');
 [n,~]=size(Tbl);
 p=3; % n° class type (faut)
 m=4; % features
