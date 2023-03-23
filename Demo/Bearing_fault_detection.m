@@ -15,7 +15,7 @@ Tbl_RollingE = readtable('../Data/Bearing_data/Rolling_elements_fault.txt', ...
 addpath '../..'/'Progetto ALES'
 
 %% split data into train validation test  (60,20,20)
-perc=[0.6 0.2 0.2];
+perc=[0.7 0.15 0.15];
 [n_normal,m_normal]=size(Tbl_Normal);
 [n_if,~]=size(Tbl_InnerR);
 [n_of,~]=size(Tbl_OuterR);
@@ -37,11 +37,12 @@ X_RE=table2array(Tbl_RollingE(:,1:m));
 X=[X_N;X_IF;X_OF;X_RE];
 
 % normalize X
-X_mu=mean(X);
-X_std=std(X);
-X=normalize(X);
+%X_mu=mean(X);
+%X_std=std(X);
+%X=normalize(X);
 
-%reload standardizated matrix
+
+
 X_N=X(1:n_normal,:);
 X_IF=X(n_normal+1:n_normal+n_if,:);
 X_OF=X(n_normal+n_if+1:n_normal+n_if+n_of,:);
@@ -69,8 +70,12 @@ X_RE_valid=X_RE(split_re(1)+1:split_re(1)+split_re(2),:);
 X_RE_test=X_RE(split_re(1)+split_re(2)+1:n_re,:);
 
 X_train=[X_N_train;X_IF_train;X_OF_train;X_RE_train];
+X_train=normalize(X_train);
 X_valid=[X_N_valid;X_IF_valid;X_OF_valid;X_RE_valid];
+X_valid=normalize(X_valid);
 X_test=[X_N_test;X_IF_test;X_OF_test;X_RE_test];
+X_test=normalize(X_test);
+X=[X_train;X_valid;X_test];
 
 %% create Y_train matrix
 p=4; % n° of classes (1 healty, 3 faulty)
@@ -117,7 +122,7 @@ Y_test=[Y_N_test;Y_IF_test;Y_OF_test;Y_RE_test];
 B2_a={};
 P_a={};
 for a=1:m
-    [T, P, U, Q, W, B, B2]=NIPALS(X,Y,a);
+    [T, P, U, Q, W, B, B2]=NIPALS(X_train,Y_train,a);
     B2_a{a}=B2;
     P_a{a}=P;
 end

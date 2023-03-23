@@ -68,7 +68,7 @@ for aa=1:2
         end
     end
     [c_matrix,Result,RefereceResult]= confusion.getMatrix(Y_class{aa},Y_hat_class{aa});
-    X_a_reduced{aa}=X*P{aa};
+    X_a_reduced{aa}=T{aa};
     %plot reducion order X in a dimensions
     if(aa==2)
     figure
